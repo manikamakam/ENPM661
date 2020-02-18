@@ -1,4 +1,5 @@
 import numpy as np
+import os
 
 
 class Puzzle:
@@ -83,7 +84,7 @@ def BFS(x,goal_node):
     while node:
         current_node = node.pop(0)
         if current_node.node_data.tolist() == goal_node.tolist():
-            print("Goal node reached")
+            print("Goal state reached")
             return current_node, nodes_list, visited_nodes
 
         for move in actions:
@@ -97,7 +98,7 @@ def BFS(x,goal_node):
                     nodes_list.append(child_node.node_data.tolist())
                     visited_nodes.append(child_node)
                     if child_node.node_data.tolist() == goal_node.tolist():
-                        print("Goal node reached")
+                        print("Goal state reached")
                         return child_node, nodes_list, visited_nodes
     return None
 
@@ -114,7 +115,7 @@ def GeneratePath(node):
 
 
 
-input_node = [1, 0,3,4,2,5,7,8,6]  
+input_node = [1,2,3,4,0,5,6,7,8]  
 # print("Enter the 9 numbers which forms the initial node (press enter after each number)")
 # # iterating till the range 
 # for i in range(0, 9): 
@@ -137,13 +138,50 @@ obj = Puzzle(0, input_node, None)
 
 goal, nodes_list, visited_nodes = BFS(obj, goal_node)
 
+if goal is not None and nodes_list is not None and visited_nodes is not None: 
 
-shortest_path = GeneratePath(goal)
+    shortest_path = GeneratePath(goal)
+    print("\n The shortest path to reach the goal is: ")
+    for node in shortest_path:
+        print("\n")
+        print(node.node_data)
 
-print("The nodes in the shortest path to reach the goal are: ")
-for l in shortest_path:
-    print("\n")
-    print(str(l.node_data))
+
+    if os.path.exists("nodePath.txt"):
+        os.remove("nodePath.txt")
+    f = open("nodePath.txt", "a")
+    for node in shortest_path:
+        transpose = zip(*node.node_data)
+        l = np.reshape(transpose, 9)
+        f.write(str(np.reshape(l, 9)) + "\n" )
+    f.close()
+
+
+    if os.path.exists("Nodes.txt"):
+        os.remove("Nodes.txt")
+    f = open("Nodes.txt", "a")
+    for node in visited_nodes:
+        transpose = zip(*node.node_data)
+        l = np.reshape(transpose, 9)
+        f.write(str(np.reshape(l, 9)) + "\n" )
+    f.close()
+
+
+    if os.path.exists("NodesInfo.txt"):
+        os.remove("NodesInfo.txt")
+    f = open("NodesInfo.txt", "a")
+    for node in visited_nodes:
+        if node.parent is not None:
+            f.write(str(node.node_index) +"\t" + str(node.parent.node_index) + "\n")
+    f.close()
+
+else:
+    print("Goal state could not be reached")
+
+
+
+
+
 
 
 
