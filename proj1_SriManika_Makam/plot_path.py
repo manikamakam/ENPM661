@@ -60,19 +60,19 @@ def ActionMoveDown(node):
         return temp_arr
 
 def MoveTile(action, node):
-    if action == 'up':
+    if action == 'Up':
         return ActionMoveUp(node)
-    if action == 'down':
+    if action == 'Down':
         return ActionMoveDown(node)
-    if action == 'left':
+    if action == 'Left':
         return ActionMoveLeft(node)
-    if action == 'right':
+    if action == 'Right':
         return ActionMoveRight(node)
     else:
         return None
 
 def BFS(x,goal_node):
-    actions = ["down", "up", "left", "right"]
+    actions = ["Down", "Up", "Left", "Right"]
     node = [x]
     nodes_list = []
     visited_nodes = []
@@ -101,7 +101,14 @@ def BFS(x,goal_node):
                         return child_node, nodes_list, visited_nodes
     return None
 
-
+def GeneratePath(node):  
+    path = []  
+    path.append(node)
+    parent_node = node.parent
+    while parent_node is not None:
+        path.append(parent_node)
+        parent_node = parent_node.parent
+    return list(reversed(path))
 
 
 
@@ -115,14 +122,14 @@ input_node = [1, 0,3,4,2,5,7,8,6]
 #     input_node.append(ele) # adding the element 
 
 input_node = np.reshape(input_node, (3,3))
-print("Input node: \n ")
+print("Input node:  ")
 print(input_node)
 
 # posiiton = BlankTileLocation(input_node)
 # print(position)
 
 goal_node = np.array([[1,2,3],[4,5,6],[7,8,0]])
-print("Goal node: \n ")
+print("Goal node:  ")
 print(goal_node)
 
 
@@ -131,9 +138,12 @@ obj = Puzzle(0, input_node, None)
 goal, nodes_list, visited_nodes = BFS(obj, goal_node)
 
 
-for i in range(len(nodes_list)):
+shortest_path = GeneratePath(goal)
+
+print("The nodes in the shortest path to reach the goal are: ")
+for l in shortest_path:
     print("\n")
-    print(np.reshape(nodes_list[i], (3,3)))
+    print(str(l.node_data))
 
 
 
