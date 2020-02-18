@@ -83,7 +83,7 @@ def BFS(x,goal_node):
     while node:
         current_node = node.pop(0)
         if current_node.node_data.tolist() == goal_node.tolist():
-            print("Goal reached")
+            print("Goal node reached")
             return current_node, nodes_list, visited_nodes
 
         for move in actions:
@@ -97,7 +97,7 @@ def BFS(x,goal_node):
                     nodes_list.append(child_node.node_data.tolist())
                     visited_nodes.append(child_node)
                     if child_node.node_data.tolist() == goal_node.tolist():
-                        print("Goal_reached")
+                        print("Goal node reached")
                         return child_node, nodes_list, visited_nodes
     return None
 
@@ -115,18 +115,31 @@ input_node = [1, 0,3,4,2,5,7,8,6]
 #     input_node.append(ele) # adding the element 
 
 input_node = np.reshape(input_node, (3,3))
-print("Input node: " , input_node) 
+print("Input node: \n ")
+print(input_node)
 
 # posiiton = BlankTileLocation(input_node)
 # print(position)
 
 goal_node = np.array([[1,2,3],[4,5,6],[7,8,0]])
-print("Goal node:", goal_node)
+print("Goal node: \n ")
+print(goal_node)
 
 
 obj = Puzzle(0, input_node, None)
 
 goal, nodes_list, visited_nodes = BFS(obj, goal_node)
+
+
+for i in range(len(nodes_list)):
+    print("\n")
+    print(np.reshape(nodes_list[i], (3,3)))
+
+
+
+
+
+
 
 
 
