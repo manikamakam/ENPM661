@@ -36,6 +36,54 @@ import numpy as np
 def BlankTileLocation(node):
     i,j = np.where(node == 0)
     return i,j
+    
+
+def ActionMoveLeft(node):
+    i, j = BlankTileLocation(node)
+    if j == 0:
+        return None
+    else:
+        temp_arr = np.copy(node)
+        temp = temp_arr[i, j - 1]
+        temp_arr[i, j] = temp
+        temp_arr[i, j - 1] = 0
+        return temp_arr
+
+
+def ActionMoveRight(node):
+    i, j = BlankTileLocation(node)
+    if j == 2:
+        return None
+    else:
+        temp_arr = np.copy(node)
+        temp = temp_arr[i, j + 1]
+        temp_arr[i, j] = temp
+        temp_arr[i, j + 1] = 0
+        return temp_arr
+
+
+def ActionMoveUp(node):
+    i, j = BlankTileLocation(node)
+    if i == 0:
+        return None
+    else:
+        temp_arr = np.copy(node)
+        temp = temp_arr[i - 1, j]
+        temp_arr[i, j] = temp
+        temp_arr[i - 1, j] = 0
+        return temp_arr
+
+
+def ActionMoveDown(node):
+    i, j = BlankTileLocation(node)
+    if i == 2:
+        return None
+    else:
+        temp_arr = np.copy(node)
+        temp = temp_arr[i + 1, j]
+        temp_arr[i, j] = temp
+        temp_arr[i + 1, j] = 0
+        return temp_arr
 
 
 
@@ -54,8 +102,8 @@ input_node = [1, 0,3,4,2,5,7,8,6]
 input_node = np.reshape(input_node, (3,3))
 print("Input node: " , input_node) 
 
-posiiton = BlankTileLocation(input_node)
-print(position)
+# posiiton = BlankTileLocation(input_node)
+# print(position)
 
 
 
