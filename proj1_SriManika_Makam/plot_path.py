@@ -1,5 +1,6 @@
 import numpy as np
 import os
+import collections 
 
 
 class Puzzle:
@@ -75,6 +76,7 @@ def MoveTile(action, node):
 def BFS(x,goal_node):
     actions = ["Down", "Up", "Left", "Right"]
     node = [x]
+    # node = collections.deque([x])
     nodes_list = []
     visited_nodes = []
     nodes_list.append(node[0].node_data.tolist())  
@@ -111,20 +113,48 @@ def GeneratePath(node):
         parent_node = parent_node.parent
     return list(reversed(path))
 
+def CheckInput(l):
+    l = np.reshape(l, 9)
+    flag=1
+    for i in range(len(l)): 
+        for i1 in range(len(l)): 
+            if i != i1: 
+                if l[i] == l[i1]: 
+                    flag = 0
+    return flag
+
+    
+def CheckSolvability(l):
+    l = np.reshape(l, 9)
+    count = 0
+    for i in range(len(l)): 
+        for j in range(i + 1, len(l)): 
+            if (l[i] > l[j] and l[i]!=0 and l[j]!=0): 
+                count += 1
+    if count % 2 == 0:
+        return 1 
+    else:
+        return 0
 
 
 
 
-input_node = [1,2,3,4,0,5,6,7,8]  
-# print("Enter the 9 numbers which forms the initial node (press enter after each number)")
-# # iterating till the range 
-# for i in range(0, 9): 
-#     ele = int(input()) 
-#     input_node.append(ele) # adding the element 
 
+# input_node = [1,4,7,0,2,8,3,5,6]  
+print("If the node is [[1,0,3],[4,2,5],[7,8,6]], then give the input as [1,4,7,0,2,8,3,5,6]")
+print("Enter the 9 numbers which forms the initial node (press enter after each number)")
+
+input_node=[]
+for i in range(0, 9): 
+    ele = int(input()) 
+    input_node.append(ele) 
+
+input_node = np.reshape(input_node, (3,3))
+input_node = zip(*input_node)
 input_node = np.reshape(input_node, (3,3))
 print("Input node:  ")
 print(input_node)
+
 
 # posiiton = BlankTileLocation(input_node)
 # print(position)
@@ -133,51 +163,61 @@ goal_node = np.array([[1,2,3],[4,5,6],[7,8,0]])
 print("Goal node:  ")
 print(goal_node)
 
+inp= CheckInput(input_node)
+sol = CheckSolvability(input_node)
 
-obj = Puzzle(0, input_node, None)
+if inp==1: 
 
-goal, nodes_list, visited_nodes = BFS(obj, goal_node)
+    if sol==1:
 
-if goal is not None and nodes_list is not None and visited_nodes is not None: 
+        obj = Puzzle(0, input_node, None)
 
-    shortest_path = GeneratePath(goal)
-    print("\n The shortest path to reach the goal is: ")
-    for node in shortest_path:
-        print("\n")
-        print(node.node_data)
+        goal, nodes_list, visited_nodes = BFS(obj, goal_node)
 
+        if goal is not None and nodes_list is not None and visited_nodes is not None: 
 
-    if os.path.exists("nodePath.txt"):
-        os.remove("nodePath.txt")
-    f = open("nodePath.txt", "a")
-    for node in shortest_path:
-        transpose = zip(*node.node_data)
-        l = np.reshape(transpose, 9)
-        f.write(str(np.reshape(l, 9)) + "\n" )
-    f.close()
+            shortest_path = GeneratePath(goal)
+            print("\n The shortest path to reach the goal is: ")
+            for node in shortest_path:
+                print("\n")
+                print(node.node_data)
 
 
-    if os.path.exists("Nodes.txt"):
-        os.remove("Nodes.txt")
-    f = open("Nodes.txt", "a")
-    for node in visited_nodes:
-        transpose = zip(*node.node_data)
-        l = np.reshape(transpose, 9)
-        f.write(str(np.reshape(l, 9)) + "\n" )
-    f.close()
+            if os.path.exists("nodePath.txt"):
+                os.remove("nodePath.txt")
+            f = open("nodePath.txt", "a")
+            for node in shortest_path:
+                transpose = zip(*node.node_data)
+                l = np.reshape(transpose, 9)
+                f.write(str(np.reshape(l, 9)) + "\n" )
+            f.close()
 
 
-    if os.path.exists("NodesInfo.txt"):
-        os.remove("NodesInfo.txt")
-    f = open("NodesInfo.txt", "a")
-    for node in visited_nodes:
-        if node.parent is not None:
-            f.write(str(node.node_index) +"\t" + str(node.parent.node_index) + "\n")
-    f.close()
+            if os.path.exists("Nodes.txt"):
+                os.remove("Nodes.txt")
+            f = open("Nodes.txt", "a")
+            for node in visited_nodes:
+                transpose = zip(*node.node_data)
+                l = np.reshape(transpose, 9)
+                f.write(str(np.reshape(l, 9)) + "\n" )
+            f.close()
 
+
+            if os.path.exists("NodesInfo.txt"):
+                os.remove("NodesInfo.txt")
+            f = open("NodesInfo.txt", "a")
+            for node in visited_nodes:
+                if node.parent is not None:
+                    f.write(str(node.node_index) +"\t" + str(node.parent.node_index) + "\n")
+            f.close()
+
+        else:
+            print("Goal state could not be reached")
+    else:
+
+        print("The puzzle cannot be solved")
 else:
-    print("Goal state could not be reached")
-
+    print ("Given input is invalid because it does not contain distinct numbers") 
 
 
 
