@@ -18,7 +18,7 @@ Implemented the 8 Puzzle Solver using Brute Force Search (BFS).
 
 ## Input format
 
-The input should be given in column form. That is, if the node is 
+The input should be given in column form. That is, if the node is <br/>
 1 2 0 <br/>
 4 5 3 <br/>
 7 8 6 <br/>
