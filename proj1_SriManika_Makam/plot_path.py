@@ -73,21 +73,27 @@ def MoveTile(action, node):
     else:
         return None
 
+def CreateKey(arr):
+    num = np.reshape(arr, 9)
+    # print(num)
+    num = int(''.join(str(i) for i in num))
+    return num
+
 def BFS(x,goal_node):
     actions = ["Down", "Up", "Left", "Right"]
-    node = [x]
-    # node = collections.deque([x])
-    nodes_list = []
+    # node = [x]
+    node = collections.deque([x])
+    nodes_list = {CreateKey(node[0].node_data) : node[0].node_index}
     visited_nodes = []
-    nodes_list.append(node[0].node_data.tolist())  
+    # nodes_list.append(node[0].node_data.tolist())  
     visited_nodes.append(x)
     index = 0
 
     while node:
-        current_node = node.pop(0)
+        current_node = node.popleft()
         if current_node.node_data.tolist() == goal_node.tolist():
             print("Goal state reached")
-            return current_node, nodes_list, visited_nodes
+            return current_node, visited_nodes
 
         for move in actions:
             temp = MoveTile(move, current_node.node_data)
@@ -95,13 +101,14 @@ def BFS(x,goal_node):
                 index += 1
                 child_node = Puzzle(index, np.array(temp), current_node)
 
-                if child_node.node_data.tolist() not in nodes_list: 
+
+                if CreateKey(child_node.node_data) not in nodes_list: 
                     node.append(child_node)
-                    nodes_list.append(child_node.node_data.tolist())
+                    nodes_list[CreateKey(child_node.node_data)] = child_node.node_index
                     visited_nodes.append(child_node)
                     if child_node.node_data.tolist() == goal_node.tolist():
                         print("Goal state reached")
-                        return child_node, nodes_list, visited_nodes
+                        return child_node, visited_nodes
     return None
 
 def GeneratePath(node):  
@@ -172,9 +179,9 @@ if inp==1:
 
         obj = Puzzle(0, input_node, None)
 
-        goal, nodes_list, visited_nodes = BFS(obj, goal_node)
+        goal, visited_nodes = BFS(obj, goal_node)
 
-        if goal is not None and nodes_list is not None and visited_nodes is not None: 
+        if goal is not None and visited_nodes is not None: 
 
             shortest_path = GeneratePath(goal)
             print("\n The shortest path to reach the goal is: ")
